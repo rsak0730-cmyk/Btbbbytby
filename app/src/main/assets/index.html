@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Samsung Music</title>
+<style>
+  :root {
+    --bg-primary: #000000;
+    --bg-surface: #121212;
+    --bg-elevated: #1c1c1e;
+    --bg-mini: #252528;
+    --text-main: #f5f5f7;
+    --text-sub: #8e8e93;
+    --accent: #3e91ff;
+    --divider: rgba(255, 255, 255, 0.08);
+    --heart: #ff3b30;
+  }
+
+  body.theme-light {
+    --bg-primary: #f2f2f7;
+    --bg-surface: #ffffff;
+    --bg-elevated: #e5e5ea;
+    --bg-mini: #ffffff;
+    --text-main: #1c1c1e;
+    --text-sub: #6c6c70;
+    --accent: #0066ff;
+    --divider: rgba(0, 0, 0, 0.08);
+  }
+  body.theme-emerald { --accent: #1db954; }
+  body.theme-violet { --accent: #8b5cf6; }
+  body.theme-rose { --accent: #f43f5e; }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "One UI Sans", sans-serif;
+  }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* 1. SAMSUNG ONE UI COLLAPSIBLE HEADER */
+  .oneui-top-container {
+    height: 195px;
+    min-height: 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px 18px 8px;
+    transition: height 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .oneui-top-container.collapsed {
+    height: 56px;
+  }
+  .oneui-title-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.15s ease;
+  }
+  .oneui-top-container.collapsed .oneui-title-area {
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+  }
+  .oneui-big-title {
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+  }
+  .oneui-action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+  }
+  .collapsed-title {
+    font-size: 19px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .oneui-top-container.collapsed .collapsed-title {
+    opacity: 1;
+  }
+  .action-icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .icon-btn:active {
+    background: var(--divider);
+  }
+  .icon-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
+  /* 2. SEARCH BAR OVERLAY */
+  .search-bar-wrap {
+    display: none;
+    padding: 4px 16px 10px;
+  }
+  .search-bar-wrap.open {
+    display: block;
+  }
+  .search-box {
+    width: 100%;
+    height: 40px;
+    border-radius: 20px;
+    background: var(--bg-elevated);
+    border: none;
+    padding: 0 16px;
+    color: var(--text-main);
+    font-size: 15px;
+    outline: none;
+  }
+
+  /* 3. EXACT SAMSUNG MUSIC UNDERLINE TABS */
+  .sam-tabs {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--divider);
+    scrollbar-width: none;
+    flex-shrink: 0;
+  }
+  .sam-tabs::-webkit-scrollbar { display: none; }
+  .sam-tab {
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-sub);
+    white-space: nowrap;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .sam-tab.active {
+    color: var(--text-main);
+  }
+  .sam-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 14px;
+    right: 14px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--text-main);
+  }
+
+  /* 4. SUB-HEADER (SHUFFLE PLAY + SORT) */
+  .list-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 18px;
+    flex-shrink: 0;
+  }
+  .shuffle-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-elevated);
+    color: var(--text-main);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .shuffle-pill:active { opacity: 0.75; }
+  .sort-btn {
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  /* 5. ROUNDED ONE UI CONTENT SURFACE & TRACK LIST */
+  .content-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-surface);
+    border-top-left-radius: 26px;
+    border-top-right-radius: 26px;
+  }
+  #list-scroll {
+    height: 100%;
+    overflow-y: auto;
+    padding: 6px 0 95px;
+  }
+  .track-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 18px;
+    gap: 14px;
+    border-bottom: 1px solid var(--divider);
+    cursor: pointer;
+  }
+  .track-row:active {
+    background: var(--divider);
+  }
+  .track-row.active .t-title {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .t-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--bg-elevated);
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .t-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .t-info {
+    flex: 1;
+    overflow: hidden;
+  }
+  .t-title {
+    font-size: 15.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .t-sub {
+    font-size: 13px;
+    color: var(--text-sub);
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .t-more {
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: none;
+    color: var(--text-sub);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* A-Z FAST SCROLL SIDEBAR */
+  .az-bar {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 3px;
+    border-radius: 10px;
+    font-size: 10px;
+    color: var(--text-sub);
+    gap: 2px;
+    z-index: 10;
+  }
+  .az-char {
+    padding: 1px 4px;
+    cursor: pointer;
+  }
+
+  /* ALBUMS & ARTISTS CLEAN GRID */
+  .sam-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 14px 16px;
+  }
+  .sam-card {
+    background: var(--bg-elevated);
+    border-radius: 16px;
+    padding: 12px;
+    cursor: pointer;
+  }
+  .sam-card-art {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: var(--bg-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .sam-card-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 6. SAMSUNG MUSIC BOTTOM MINI PLAYER PILL */
+  .sam-mini-player {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    height: 62px;
+    border-radius: 31px;
+    background: var(--bg-mini);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 11px;
+    z-index: 50;
+    border: 1px solid var(--divider);
+  }
+  .mini-art-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mini-art-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .mini-text {
+    flex: 1;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .mini-btns {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .m-btn {
+    width: 38px;
+    height: 38px;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .m-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
+  /* 7. FULL-SCREEN NOW PLAYING (100% SAMSUNG MUSIC LAYOUT) */
+  #now-playing-sheet {
+    position: fixed;
+    inset: 0;
+    background: #0d0d11;
+    color: #ffffff;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px 24px 24px;
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.2, 1);
+    overflow: hidden;
+  }
+  #now-playing-sheet.open {
+    transform: translateY(0);
+  }
+  /* Dynamic Blurred Album Background */
+  #np-blur-bg {
+    position: absolute;
+    inset: -40px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(55px) brightness(0.42) saturate(1.6);
+    z-index: -1;
+    transition: background-image 0.5s ease;
+  }
+
+  .np-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .np-center-stage {
+    flex: 1;
+    display: flex;
+     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    my: 8px;
+  }
+  .np-album-box {
+    width: min(74vw, 290px);
+    height: min(74vw, 290px);
+    border-radius: 22px;
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .np-album-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Synced Lyrics & Queue Drawer inside Now Playing */
+  .np-panel-box {
+    display: none;
+    width: 100%;
+    height: 280px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.35);
+    border-radius: 18px;
+    padding: 16px;
+    backdrop-filter: blur(12px);
+  }
+  .np-panel-box.active {
+    display: block;
+  }
+  .lrc-row {
+    padding: 7px 0;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 15px;
+    transition: 0.2s;
+  }
+  .lrc-row.active {
+    color: #fff;
+    font-size: 17.5px;
+    font-weight: 700;
+  }
+
+  .np-title-block {
+    text-align: center;
+    margin: 10px 0 6px;
+  }
+  .np-song-title {
+    font-size: 21px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .np-song-artist {
+    font-size: 14.5px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+  }
+
+  /* Samsung Secondary Utility Row (Heart, Lyrics, SoundAlive EQ, Speed, Queue) */
+  .np-utility-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 6px;
+  }
+  .u-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.85);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .u-btn.liked { color: var(--heart); }
+
+  /* Subtle Visualizer Canvas */
+  #np-wave {
+    width: 100%;
+    height: 26px;
+    opacity: 0.75;
+  }
+
+  /* Seek Bar */
+  .np-seek-area {
+    margin: 4px 0 10px;
+  }
+  .np-slider {
+    width: 100%;
+    height: 4px;
+    accent-color: #ffffff;
+    cursor: pointer;
+  }
+  .np-times {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 6px;
+  }
+
+  /* Primary Playback Controls (Shuffle, Prev, Play/Pause, Next, Repeat) */
+  .np-transport {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 4px 8px;
+  }
+  .t-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    padding: 8px;
+    cursor: pointer;
+    opacity: 0.85;
+  }
+  .t-btn.active-mode {
+    color: var(--accent);
+    opacity: 1;
+  }
+  .t-play-circle {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* 8. ONE UI BOTTOM SHEETS (SETTINGS, SOUNDALIVE EQ, TRACK MENU) */
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+  }
+  .sheet-backdrop.open {
+    display: flex;
+  }
+  .oneui-sheet {
+    width: 100%;
+    background: var(--bg-elevated);
+    color: var(--text-main);
+    border-top-left-radius: 26px;
+    border-top-right-radius: 26px;
+    padding: 20px;
+    max-height: 82vh;
+    overflow-y: auto;
+  }
+  .sheet-handle {
+    width: 38px;
+    height: 4px;
+    background: var(--text-sub);
+    border-radius: 2px;
+    margin: 0 auto 14px;
+    opacity: 0.5;
+  }
+  .menu-item {
+    padding: 13px 8px;
+    font-size: 15.5px;
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .eq-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 155px;
+    margin: 14px 0;
+  }
+  .eq-band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-sub);
+  }
+  .eq-band input[type=range] {
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
+    width: 24px;
+    height: 115px;
+    accent-color: var(--accent);
+  }
+  .chip-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .chip-btn {
+    padding: 6px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--divider);
+    background: var(--bg-surface);
+    color: var(--text-main);
+    font-size: 12.5px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- Web File Picker Fallback (if tested in browser) -->
+<input type="file" id="browser-file-input" multiple accept="audio/*" style="display:none">
+
+<!-- 1. ONE UI COLLAPSIBLE HEADER -->
+<header class="oneui-top-container" id="oneui-header">
+  <div class="oneui-title-area">
+    <div class="oneui-big-title">SAMSUNG Music</div>
+  </div>
+  <div class="oneui-action-bar">
+    <div class="collapsed-title">SAMSUNG Music</div>
+    <div class="action-icons">
+      <!-- Search Icon -->
+      <button class="icon-btn" onclick="toggleSearchBar()" title="Search">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </button>
+      <!-- SoundAlive EQ Icon -->
+      <button class="icon-btn" onclick="openSheet('eq-sheet')" title="SoundAlive Equalizer">
+        <svg viewBox="0 0 24 24"><path d="M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V6h-2v12zm4-8v4h2v-4h-2z"/></svg>
+      </button>
+      <!-- 3-Dot More / Settings Icon -->
+      <button class="icon-btn" onclick="openSheet('settings-sheet')" title="More Options">
+        <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- 2. SEARCH INPUT -->
+<div class="search-bar-wrap" id="search-wrap">
+  <input type="text" class="search-box" id="search-input" placeholder="Search tracks, artists, albums..." oninput="renderContent()">
+</div>
+
+<!-- 3. SAMSUNG MUSIC CATEGORY TABS -->
+<nav class="sam-tabs">
+  <div class="sam-tab" onclick="selectTab('favorites', this)">Favorites</div>
+  <div class="sam-tab" onclick="selectTab('playlists', this)">Playlists</div>
+  <div class="sam-tab active" onclick="selectTab('tracks', this)">Tracks</div>
+  <div class="sam-tab" onclick="selectTab('albums', this)">Albums</div>
+  <div class="sam-tab" onclick="selectTab('artists', this)">Artists</div>
+  <div class="sam-tab" onclick="selectTab('folders', this)">Folders</div>
+</nav>
+
+<!-- 4. SHUFFLE PLAY & SORT TOOLBAR -->
+<div class="list-toolbar">
+  <button class="shuffle-pill" onclick="shufflePlayAll()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+    <span id="shuffle-label">Shuffle play (0)</span>
+  </button>
+  <button class="sort-btn" onclick="cycleSortOrder()">
+    <span id="sort-label">↕ Name A-Z</span>
+  </button>
+</div>
+
+<!-- 5. MAIN ROUNDED LIST CONTAINER + A-Z SCROLLBAR -->
+<div class="content-wrapper">
+  <main id="list-scroll" onscroll="onListScroll(this)"></main>
+  <div class="az-bar" id="az-bar"></div>
+</div>
+
+<!-- 6. SAMSUNG BOTTOM MINI-PLAYER -->
+<div class="sam-mini-player">
+  <div class="mini-art-circle" id="mini-art" onclick="openNowPlaying()">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="#888"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+  </div>
+  <div class="mini-text" onclick="openNowPlaying()">
+    <div class="t-title" id="mini-title">No track selected</div>
+    <div class="t-sub" id="mini-artist">Tap a song to start playing</div>
+  </div>
+  <div class="mini-btns">
+    <button class="m-btn" onclick="prevSong()">
+      <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+    </button>
+    <button class="m-btn" id="mini-play-icon" onclick="togglePlayState()">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="m-btn" onclick="nextSong()">
+      <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- 7. FULL-SCREEN NOW PLAYING SCREEN -->
+<section id="now-playing-sheet">
+  <div id="np-blur-bg"></div>
+
+  <!-- Top Row -->
+  <div class="np-top-bar">
+    <button class="icon-btn" style="color:#fff" onclick="closeNowPlaying()">
+      <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+    </button>
+    <div style="font-size:13px; opacity:0.8;" id="np-folder-badge">Internal Storage</div>
+    <button class="icon-btn" style="color:#fff" onclick="openCurrentTrackMenu()">
+      <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    </button>
+  </div>
+
+  <!-- Center Album Art / Lyrics / Queue -->
+  <div class="np-center-stage">
+    <div class="np-album-box" id="np-art-box" onclick="toggleNpDrawer('lyrics')">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+    </div>
+    <div class="np-panel-box" id="np-drawer"></div>
+  </div>
+
+  <!-- Track Title & Artist -->
+  <div class="np-title-block">
+    <div class="np-song-title" id="np-title">Not Playing</div>
+    <div class="np-song-artist" id="np-artist">Unknown Artist</div>
+  </div>
+
+  <!-- Utility Icons Row (Favorite, Lyrics, SoundAlive, Speed, Queue) -->
+  <div class="np-utility-bar">
+    <button class="u-btn" id="np-fav-btn" onclick="toggleCurrentFavorite()" style="font-size:21px;">♡</button>
+    <button class="u-btn" onclick="toggleNpDrawer('lyrics')">LYRICS</button>
+    <button class="u-btn" onclick="openSheet('eq-sheet')">SOUNDALIVE</button>
+    <button class="u-btn" id="np-speed-btn" onclick="cycleSpeed()">1.0x</button>
+    <button class="u-btn" onclick="toggleNpDrawer('queue')">QUEUE</button>
+  </div>
+
+  <!-- Subtle Audio Spectrum -->
+  <canvas id="np-wave" width="320" height="26"></canvas>
+
+  <!-- Seek Bar -->
+  <div class="np-seek-area">
+    <input type="range" class="np-slider" id="np-seek" min="0" max="100" value="0" oninput="seekAudio(this.value)">
+    <div class="np-times">
+      <span id="np-cur-time">0:00</span>
+      <span id="np-tot-time">0:00</span>
+    </div>
+  </div>
+
+  <!-- Main Playback Controls -->
+  <div class="np-transport">
+    <button class="t-btn" id="np-shuf-btn" onclick="toggleShuffleMode()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+    </button>
+    <button class="t-btn" onclick="prevSong()">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+    </button>
+    <button class="t-play-circle" id="np-play-btn" onclick="togglePlayState()">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <button class="t-btn" onclick="nextSong()">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+    </button>
+    <button class="t-btn" id="np-rep-btn" onclick="toggleRepeatMode()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- SHEET 1: SOUNDALIVE EQUALIZER & BASS BOOST -->
+<div class="sheet-backdrop" id="eq-sheet" onclick="closeSheet('eq-sheet', event)">
+  <div class="oneui-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <h3 style="font-size:18px; margin-bottom:12px;">Sound quality and effects</h3>
+    <div class="chip-row">
+      <button class="chip-btn" onclick="setEqPreset([0,0,0,0,0])">Normal</button>
+      <button class="chip-btn" onclick="setEqPreset([5,3,-2,3,5])">Pop</button>
+      <button class="chip-btn" onclick="setEqPreset([7,4,-1,4,6])">Rock</button>
+      <button class="chip-btn" onclick="setEqPreset([9,6,0,2,4])">Bass Boost</button>
+      <button class="chip-btn" onclick="setEqPreset([-2,3,7,6,1])">Clear Vocal</button>
+    </div>
+    <div class="eq-grid">
+      <div class="eq-band"><input type="range" min="-15" max="15" value="0" oninput="setBand(0, this.value)"><span>60Hz</span></div>
+      <div class="eq-band"><input type="range" min="-15" max="15" value="0" oninput="setBand(1, this.value)"><span>230Hz</span></div>
+      <div class="eq-band"><input type="range" min="-15" max="15" value="0" oninput="setBand(2, this.value)"><span>910Hz</span></div>
+      <div class="eq-band"><input type="range" min="-15" max="15" value="0" oninput="setBand(3, this.value)"><span>3.6k</span></div>
+      <div class="eq-band"><input type="range" min="-15" max="15" value="0" oninput="setBand(4, this.value)"><span>14k</span></div>
+    </div>
+    <div style="margin-top:8px;">
+      <div style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:6px;">
+        <span>Bass boost effect</span><span id="bass-pct">0%</span>
+      </div>
+      <input type="range" class="np-slider" style="accent-color:var(--accent)" min="0" max="1000" value="0" oninput="setBass(this.value)">
+    </div>
+  </div>
+</div>
+
+<!-- SHEET 2: SAMSUNG MUSIC SETTINGS & MORE MENU -->
+<div class="sheet-backdrop" id="settings-sheet" onclick="closeSheet('settings-sheet', event)">
+  <div class="oneui-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <h3 style="font-size:18px; margin-bottom:10px;">Samsung Music Settings</h3>
+    <div class="menu-item" onclick="rescanLibrary()">
+      <span>Rescan local storage / Import files</span><span>🔄</span>
+    </div>
+    <div class="menu-item" onclick="cycleAppTheme()">
+      <span>Appearance & Accent Theme</span><span id="theme-status" style="color:var(--accent)">One UI Dark</span>
+    </div>
+    <div class="menu-item" onclick="cycleSleepTimer()">
+      <span>Sleep timer (Auto-off)</span><span id="sleep-status" style="color:var(--accent)">Off</span>
+    </div>
+    <div class="menu-item" onclick="createNewPlaylistPrompt()">
+      <span>Create new playlist</span><span>＋</span>
+    </div>
+  </div>
+</div>
+
+<!-- SHEET 3: 3-DOT TRACK ACTION & TAG/LRC EDITOR -->
+<div class="sheet-backdrop" id="track-menu-sheet" onclick="closeSheet('track-menu-sheet', event)">
+  <div class="oneui-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <h3 style="font-size:16px; margin-bottom:12px;" id="menu-track-name">Track Options</h3>
+    <div class="menu-item" onclick="addSelectedToPlaylist()">
+      <span>Add to Playlist</span><span>➕</span>
+    </div>
+    <div style="margin-top:14px; font-size:13px; color:var(--text-sub); margin-bottom:6px;">Edit Track Metadata & Synced Lyrics (.LRC)</div>
+    <input type="text" id="tag-title" class="search-box" style="margin-bottom:8px;" placeholder="Song Title">
+    <input type="text" id="tag-artist" class="search-box" style="margin-bottom:8px;" placeholder="Artist">
+    <textarea id="tag-lrc" class="search-box" style="height:95px; padding:10px; border-radius:14px;" placeholder="[00:10.00] Paste synced .LRC lyrics here..."></textarea>
+    <button onclick="saveTrackMetadata()" style="width:100%; margin-top:10px; padding:12px; border-radius:20px; border:none; background:var(--accent); color:#fff; font-weight:600;">Save Changes</button>
+  </div>
+</div>
+
+<script>
+  const hasNativeBridge = typeof window.AndroidBridge !== 'undefined';
+
+  let allTracks = [];
+  let favIds = JSON.parse(localStorage.getItem('sam_favs') || '[]');
+  let playlists = JSON.parse(localStorage.getItem('sam_playlists') || '{"My Favorites Mix":[]}');
+  let lrcStore = JSON.parse(localStorage.getItem('sam_lrc') || '{}');
+  let tagOverrides = JSON.parse(localStorage.getItem('sam_tags') || '{}');
+
+  let activeTab = 'tracks';
+  let subCategoryFilter = null;
+  let sortMode = 0; // 0: A-Z, 1: Artist, 2: Duration
+  let currentIdx = -1;
+  let menuTargetIdx = -1;
+  let isPlaying = false;
+  let isShuffle = false;
+  let repeatState = 0; // 0: Off, 1: All, 2: One
+  let curSpeed = 1.0;
+  let activeDrawer = null;
+
+  // Themes
+  const appThemes = [
+    { cls: '', name: 'One UI Dark (Blue)' },
+    { cls: 'theme-light', name: 'One UI Light' },
+    { cls: 'theme-emerald', name: 'AMOLED Emerald' },
+    { cls: 'theme-violet', name: 'Galaxy Violet' },
+    { cls: 'theme-rose', name: 'Crimson Rose' }
+  ];
+  let themeIndex = 0;
+
+  // Sleep Timer
+  let sleepMins = 0;
+  let sleepTimerId = null;
+
+  // Browser fallback audio
+  const htmlAudio = new Audio();
+  let audioCtx, analyser, eqFilters = [];
+
+  const SVG_PLAY = `<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+  const SVG_PAUSE = `<svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+  const SVG_NOTE = `<svg width="24" height="24" viewBox="0 0 24 24" fill="#888"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>`;
+
+  window.onload = () => {
+    buildAzSidebar();
+    scanDeviceMusic();
+    setInterval(updateProgressLoop, 500);
+    renderWaveLoop();
+  };
+
+  function scanDeviceMusic() {
+    if (hasNativeBridge) {
+      try {
+        allTracks = JSON.parse(window.AndroidBridge.scanAllMusic());
+      } catch (e) { allTracks = []; }
+    }
+    // Apply saved user tag edits
+    allTracks.forEach(t => {
+      if (tagOverrides[t.id]) {
+        t.title = tagOverrides[t.id].title || t.title;
+        t.artist = tagOverrides[t.id].artist || t.artist;
+      }
+    });
+    renderContent();
+  }
+
+  function rescanLibrary() {
+    closeSheet('settings-sheet');
+    if (hasNativeBridge) {
+      scanDeviceMusic();
+    } else {
+      document.getElementById('browser-file-input').click();
+    }
+  }
+
+  document.getElementById('browser-file-input').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    allTracks = files.map((f, i) => ({
+      id: i + 1,
+      title: f.name.replace(/\.[^/.]+$/, ""),
+      artist: "Unknown Artist",
+      album: "Local Storage",
+      folder: "Music",
+      duration: 200,
+      blobUrl: URL.createObjectURL(f),
+      art: ""
+    }));
+    renderContent();
+    playTrackAt(0);
+  });
+
+  function onListScroll(el) {
+    const hdr = document.getElementById('oneui-header');
+    if (el.scrollTop > 30) hdr.classList.add('collapsed');
+    else hdr.classList.remove('collapsed');
+  }
+
+  function selectTab(tab, el) {
+    activeTab = tab;
+    subCategoryFilter = null;
+    document.querySelectorAll('.sam-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    document.getElementById('az-bar').style.display = (tab === 'tracks' || tab === 'favorites') ? 'flex' : 'none';
+    renderContent();
+  }
+
+  function cycleSortOrder() {
+    sortMode = (sortMode + 1) % 3;
+    const labels = ['↕ Name A-Z', '↕ Artist', '↕ Duration'];
+    document.getElementById('sort-label').innerText = labels[sortMode];
+    renderContent();
+  }
+
+  function getFilteredTracks() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
+    let list = allTracks.filter(t =>
+      t.title.toLowerCase().includes(query) ||
+      t.artist.toLowerCase().includes(query) ||
+      t.album.toLowerCase().includes(query)
+    );
+
+    if (activeTab === 'favorites') {
+      list = list.filter(t => favIds.includes(t.id));
+    } else if (subCategoryFilter) {
+      if (subCategoryFilter.key === 'playlist') {
+        const ids = playlists[subCategoryFilter.val] || [];
+        list = list.filter(t => ids.includes(t.id));
+      } else {
+        list = list.filter(t => t[subCategoryFilter.key] === subCategoryFilter.val);
+      }
+    }
+
+    list.sort((a, b) => {
+      if (sortMode === 0) return a.title.localeCompare(b.title);
+      if (sortMode === 1) return a.artist.localeCompare(b.artist);
+      return b.duration - a.duration;
+    });
+    return list;
+  }
+
+  function renderContent() {
+    const box = document.getElementById('list-scroll');
+    box.innerHTML = '';
+    const filtered = getFilteredTracks();
+    document.getElementById('shuffle-label').innerText = `Shuffle play (${filtered.length})`;
+
+    // Drill-down Back Button
+    if (subCategoryFilter) {
+      const backRow = document.createElement('div');
+      backRow.className = 'track-row';
+      backRow.innerHTML = `<div style="color:var(--accent); font-weight:600;">← Back to ${activeTab.toUpperCase()} (${subCategoryFilter.val})</div>`;
+      backRow.onclick = () => { subCategoryFilter = null; renderContent(); };
+      box.appendChild(backRow);
+    }
+
+    // Playlists View
+    if (activeTab === 'playlists' && !subCategoryFilter) {
+      Object.keys(playlists).forEach(pName => {
+        const count = playlists[pName].length;
+        const row = document.createElement('div');
+        row.className = 'track-row';
+        row.innerHTML = `
+          <div class="t-thumb">${SVG_NOTE}</div>
+          <div class="t-info">
+            <div class="t-title">${pName}</div>
+            <div class="t-sub">${count} tracks</div>
+          </div>
+        `;
+        row.onclick = () => { subCategoryFilter = { key: 'playlist', val: pName }; renderContent(); };
+        box.appendChild(row);
+      });
+      return;
+    }
+
+    // Albums / Artists / Folders Grid
+    if ((activeTab === 'albums' || activeTab === 'artists' || activeTab === 'folders') && !subCategoryFilter) {
+      const key = activeTab === 'albums' ? 'album' : (activeTab === 'artists' ? 'artist' : 'folder');
+      const map = {};
+      allTracks.forEach(t => {
+        if (!map[t[key]]) map[t[key]] = { count: 0, art: t.art };
+        map[t[key]].count++;
+      });
+
+      const grid = document.createElement('div');
+      grid.className = 'sam-grid';
+      Object.keys(map).forEach(name => {
+        const card = document.createElement('div');
+        card.className = 'sam-card';
+        card.innerHTML = `
+          <div class="sam-card-art">
+            ${map[name].art ? `<img src="${map[name].art}" onerror="this.style.display='none'">` : SVG_NOTE}
+          </div>
+          <div class="t-title">${name}</div>
+          <div class="t-sub">${map[name].count} tracks</div>
+        `;
+        card.onclick = () => { subCategoryFilter = { key, val: name }; renderContent(); };
+        grid.appendChild(card);
+      });
+      box.appendChild(grid);
+      return;
+    }
+
+    if (filtered.length === 0) {
+      box.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text-sub);">No music files found.<br><br>Tap <b>⋮ → Rescan local storage</b> to load audio.</div>`;
+      return;
+    }
+
+    filtered.forEach(tr => {
+      const masterIdx = allTracks.findIndex(x => x.id === tr.id);
+      const row = document.createElement('div');
+      row.className = 'track-row' + (masterIdx === currentIdx ? ' active' : '');
+      row.dataset.letter = tr.title.charAt(0).toUpperCase();
+      row.innerHTML = `
+        <div class="t-thumb" onclick="playTrackAt(${masterIdx})">
+          ${tr.art ? `<img src="${tr.art}" onerror="this.style.display='none'">` : SVG_NOTE}
+        </div>
+        <div class="t-info" onclick="playTrackAt(${masterIdx})">
+          <div class="t-title">${tr.title}</div>
+          <div class="t-sub">${tr.artist} · ${tr.album}</div>
+        </div>
+        <button class="t-more" onclick="openTrackOptions(${masterIdx}, event)">⋮</button>
+      `;
+      box.appendChild(row);
+    });
+  }
+
+  function buildAzSidebar() {
+    const bar = document.getElementById('az-bar');
+    const chars = '#ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    bar.innerHTML = chars.map(c => `<div class="az-char" onclick="scrollToLetter('${c}')">${c}</div>`).join('');
+  }
+
+  function scrollToLetter(c) {
+    const rows = Array.from(document.querySelectorAll('.track-row[data-letter]'));
+    const target = rows.find(r => r.dataset.letter >= c);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* PLAYBACK ENGINE */
+  function playTrackAt(idx) {
+    if (idx < 0 || idx >= allTracks.length) return;
+    currentIdx = idx;
+    const tr = allTracks[currentIdx];
+
+    if (hasNativeBridge) {
+      isPlaying = window.AndroidBridge.playTrack(tr.id);
+    } else if (tr.blobUrl) {
+      setupBrowserWebAudio();
+      htmlAudio.src = tr.blobUrl;
+      htmlAudio.play();
+      isPlaying = true;
+    }
+    refreshPlayerUI();
+    renderContent();
+  }
+
+  function togglePlayState() {
+    if (currentIdx === -1 && allTracks.length > 0) {
+      playTrackAt(0);
+      return;
+    }
+    if (hasNativeBridge) {
+      isPlaying = window.AndroidBridge.togglePlayPause();
+    } else {
+      if (htmlAudio.paused) { htmlAudio.play(); isPlaying = true; }
+      else { htmlAudio.pause(); isPlaying = false; }
+    }
+    refreshPlayerUI();
+  }
+
+  function nextSong() {
+    if (!allTracks.length) return;
+    if (isShuffle) {
+      playTrackAt(Math.floor(Math.random() * allTracks.length));
+    } else {
+      playTrackAt((currentIdx + 1) % allTracks.length);
+    }
+  }
+
+  function prevSong() {
+    if (!allTracks.length) return;
+    playTrackAt((currentIdx - 1 + allTracks.length) % allTracks.length);
+  }
+
+  function shufflePlayAll() {
+    if (!allTracks.length) return;
+    isShuffle = true;
+    document.getElementById('np-shuf-btn').classList.add('active-mode');
+    nextSong();
+  }
+
+  window.onNativeTrackEnded = () => {
+    if (repeatState === 2) playTrackAt(currentIdx);
+    else nextSong();
+  };
+  htmlAudio.onended = () => window.onNativeTrackEnded();
+
+  function refreshPlayerUI() {
+    const tr = allTracks[currentIdx];
+    if (!tr) return;
+
+    document.getElementById('mini-title').innerText = tr.title;
+    document.getElementById('mini-artist').innerText = tr.artist;
+    document.getElementById('np-title').innerText = tr.title;
+    document.getElementById('np-artist').innerText = tr.artist;
+    document.getElementById('np-folder-badge').innerText = tr.album || tr.folder;
+
+    const artHtml = tr.art ? `<img src="${tr.art}" onerror="this.style.display='none'">` : SVG_NOTE;
+    document.getElementById('mini-art').innerHTML = artHtml;
+    document.getElementById('np-art-box').innerHTML = artHtml;
+    document.getElementById('np-blur-bg').style.backgroundImage = tr.art ? `url('${tr.art}')` : 'none';
+
+    document.getElementById('mini-play-icon').innerHTML = isPlaying ? SVG_PAUSE : SVG_PLAY;
+    document.getElementById('np-play-btn').innerHTML = isPlaying ? SVG_PAUSE : SVG_PLAY;
+
+    const liked = favIds.includes(tr.id);
+    const favBtn = document.getElementById('np-fav-btn');
+    favBtn.innerText = liked ? '♥' : '♡';
+    favBtn.classList.toggle('liked', liked);
+
+    if (activeDrawer) renderNpDrawer();
+  }
+
+  function updateProgressLoop() {
+    if (currentIdx === -1) return;
+    const tr = allTracks[currentIdx];
+    let pos = 0, dur = tr.duration || 1;
+
+    if (hasNativeBridge) {
+      pos = window.AndroidBridge.getCurrentPosition();
+      isPlaying = window.AndroidBridge.isPlaying();
+    } else if (tr.blobUrl) {
+      pos = Math.floor(htmlAudio.currentTime || 0);
+      dur = Math.floor(htmlAudio.duration || tr.duration || 1);
+    }
+
+    const slider = document.getElementById('np-seek');
+    slider.max = dur;
+    slider.value = pos;
+    document.getElementById('np-cur-time').innerText = fmtTime(pos);
+    document.getElementById('np-tot-time').innerText = fmtTime(dur);
+
+    syncLyricsScroll(pos);
+  }
+
+  function seekAudio(sec) {
+    if (hasNativeBridge) window.AndroidBridge.seekTo(parseInt(sec));
+    else htmlAudio.currentTime = parseInt(sec);
+  }
+
+  function fmtTime(s) {
+    const m = Math.floor(s / 60);
+    const r = Math.floor(s % 60);
+    return `${m}:${r < 10 ? '0' : ''}${r}`;
+  }
+
+  function toggleCurrentFavorite() {
+    if (currentIdx === -1) return;
+    const id = allTracks[currentIdx].id;
+    const i = favIds.indexOf(id);
+    if (i > -1) favIds.splice(i, 1);
+    else favIds.push(id);
+    localStorage.setItem('sam_favs', JSON.stringify(favIds));
+    refreshPlayerUI();
+    if (activeTab === 'favorites') renderContent();
+  }
+
+  function toggleShuffleMode() {
+    isShuffle = !isShuffle;
+    document.getElementById('np-shuf-btn').classList.toggle('active-mode', isShuffle);
+  }
+
+  function toggleRepeatMode() {
+    repeatState = (repeatState + 1) % 3;
+    const btn = document.getElementById('np-rep-btn');
+    btn.classList.toggle('active-mode', repeatState > 0);
+  }
+
+  function cycleSpeed() {
+    const list = [0.75, 1.0, 1.25, 1.5, 2.0];
+    curSpeed = list[(list.indexOf(curSpeed) + 1) % list.length];
+    document.getElementById('np-speed-btn').innerText = `${curSpeed}x`;
+    if (hasNativeBridge) window.AndroidBridge.setSpeed(curSpeed);
+    else htmlAudio.playbackRate = curSpeed;
+  }
+
+  /* LYRICS (.LRC) & UPCOMING QUEUE DRAWER */
+  function toggleNpDrawer(mode) {
+    const drawer = document.getElementById('np-drawer');
+    const art = document.getElementById('np-art-box');
+    if (activeDrawer === mode) {
+      activeDrawer = null;
+      drawer.classList.remove('active');
+      art.style.display = 'flex';
+    } else {
+      activeDrawer = mode;
+      drawer.classList.add('active');
+      art.style.display = 'none';
+      renderNpDrawer();
+    }
+  }
+
+  function renderNpDrawer() {
+    const drawer = document.getElementById('np-drawer');
+    const tr = allTracks[currentIdx];
+    if (!tr) return;
+
+    if (activeDrawer === 'lyrics') {
+      const raw = lrcStore[tr.id] || "[00:00.00] No synced lyrics saved for this track.\n[00:03.00] Tap ⋮ top-right to paste .LRC lyrics.";
+      drawer.innerHTML = raw.split('\n').map(line => {
+        const m = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
+        if (m) {
+          const sec = parseInt(m[1]) * 60 + parseFloat(m[2]);
+          return `<div class="lrc-row" data-sec="${sec}">${m[3]}</div>`;
+        }
+        return `<div class="lrc-row">${line}</div>`;
+      }).join('');
+    } else if (activeDrawer === 'queue') {
+      drawer.innerHTML = `<div style="font-weight:700; margin-bottom:10px; font-size:14px;">Now Playing Queue (${allTracks.length})</div>` +
+        allTracks.slice(0, 40).map((t, i) => `
+          <div onclick="playTrackAt(${i})" style="padding:9px 4px; border-bottom:1px solid rgba(255,255,255,0.1); font-size:13.5px; color:${i===currentIdx?'var(--accent)':'#fff'}; cursor:pointer;">
+            ${i + 1}. ${t.title} <span style="opacity:0.6">— ${t.artist}</span>
+          </div>
+        `).join('');
+    }
+  }
+
+  function syncLyricsScroll(sec) {
+    if (activeDrawer !== 'lyrics') return;
+    const rows = Array.from(document.querySelectorAll('.lrc-row[data-sec]'));
+    let active = null;
+    rows.forEach(r => {
+      r.classList.remove('active');
+      if (parseFloat(r.dataset.sec) <= sec) active = r;
+    });
+    if (active) {
+      active.classList.add('active');
+      active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  /* SOUNDALIVE DSP & EQUALIZER */
+  function setupBrowserWebAudio() {
+    if (audioCtx) return;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new Ctx();
+    const src = audioCtx.createMediaElementSource(htmlAudio);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+    eqFilters = [60, 230, 910, 3600, 14000].map(f => {
+      const b = audioCtx.createBiquadFilter();
+      b.type = 'peaking';
+      b.frequency.value = f;
+      return b;
+    });
+    let chain = src;
+    eqFilters.forEach(f => { chain.connect(f); chain = f; });
+    chain.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  }
+
+  function setBand(idx, val) {
+    if (hasNativeBridge) window.AndroidBridge.setEqBand(idx, parseInt(val));
+    else if (eqFilters[idx]) eqFilters[idx].gain.value = parseFloat(val);
+  }
+
+  function setEqPreset(arr) {
+    const sliders = document.querySelectorAll('.eq-band input');
+    arr.forEach((v, i) => {
+      if (sliders[i]) sliders[i].value = v;
+      setBand(i, v);
+    });
+  }
+
+  function setBass(val) {
+    document.getElementById('bass-pct').innerText = Math.round(val / 10) + '%';
+    if (hasNativeBridge) window.AndroidBridge.setBassBoostLevel(parseInt(val));
+    else if (eqFilters[0]) eqFilters[0].gain.value = (val / 1000) * 15;
+  }
+
+  /* SUBTLE WAVE SPECTRUM */
+  function renderWaveLoop() {
+    const cvs = document.getElementById('np-wave');
+    const ctx = cvs.getContext('2d');
+    const bars = 30;
+    const freqData = new Uint8Array(bars);
+
+    function draw() {
+      ctx.clearRect(0, 0, cvs.width, cvs.height);
+      if (analyser && isPlaying) analyser.getByteFrequencyData(freqData);
+      const w = (cvs.width / bars) - 3;
+      for (let i = 0; i < bars; i++) {
+        let h = 3;
+        if (isPlaying) {
+          h = analyser ? (freqData[i] / 255) * cvs.height : (Math.sin(Date.now() / 150 + i) * 0.5 + 0.5) * (cvs.height - 6) + 3;
+        }
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(i * (w + 3), cvs.height - h, w, h);
+      }
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  /* MENUS, TAG EDITOR, PLAYLISTS & SETTINGS */
+  function openTrackOptions(idx, ev) {
+    if (ev) ev.stopPropagation();
+    menuTargetIdx = idx;
+    const tr = allTracks[idx];
+    if (!tr) return;
+    document.getElementById('menu-track-name').innerText = tr.title;
+    document.getElementById('tag-title').value = tr.title;
+    document.getElementById('tag-artist').value = tr.artist;
+    document.getElementById('tag-lrc').value = lrcStore[tr.id] || '';
+    openSheet('track-menu-sheet');
+  }
+
+  function openCurrentTrackMenu() {
+    if (currentIdx !== -1) openTrackOptions(currentIdx);
+  }
+
+  function saveTrackMetadata() {
+    if (menuTargetIdx === -1) return;
+    const tr = allTracks[menuTargetIdx];
+    tr.title = document.getElementById('tag-title').value || tr.title;
+    tr.artist = document.getElementById('tag-artist').value || tr.artist;
+    tagOverrides[tr.id] = { title: tr.title, artist: tr.artist };
+    lrcStore[tr.id] = document.getElementById('tag-lrc').value;
+
+    localStorage.setItem('sam_tags', JSON.stringify(tagOverrides));
+    localStorage.setItem('sam_lrc', JSON.stringify(lrcStore));
+    closeSheet('track-menu-sheet');
+    refreshPlayerUI();
+    renderContent();
+  }
+
+  function createNewPlaylistPrompt() {
+    const name = prompt("Enter new playlist name:");
+    if (name && name.trim()) {
+      playlists[name.trim()] = [];
+      localStorage.setItem('sam_playlists', JSON.stringify(playlists));
+      closeSheet('settings-sheet');
+      renderContent();
+    }
+  }
+
+  function addSelectedToPlaylist() {
+    if (menuTargetIdx === -1) return;
+    const tr = allTracks[menuTargetIdx];
+    const names = Object.keys(playlists);
+    const chosen = prompt(`Add "${tr.title}" to playlist:\nAvailable: ${names.join(', ')}`, names[0] || "My Favorites Mix");
+    if (chosen && chosen.trim()) {
+      if (!playlists[chosen]) playlists[chosen] = [];
+      if (!playlists[chosen].includes(tr.id)) playlists[chosen].push(tr.id);
+      localStorage.setItem('sam_playlists', JSON.stringify(playlists));
+      closeSheet('track-menu-sheet');
+    }
+  }
+
+  function cycleAppTheme() {
+    themeIndex = (themeIndex + 1) % appThemes.length;
+    document.body.className = appThemes[themeIndex].cls;
+    document.getElementById('theme-status').innerText = appThemes[themeIndex].name;
+  }
+
+  function cycleSleepTimer() {
+    const opts = [0, 15, 30, 60];
+    sleepMins = opts[(opts.indexOf(sleepMins) + 1) % opts.length];
+    clearTimeout(sleepTimerId);
+    document.getElementById('sleep-status').innerText = sleepMins ? `${sleepMins} mins` : 'Off';
+    if (sleepMins > 0) {
+      sleepTimerId = setTimeout(() => { if (isPlaying) togglePlayState(); }, sleepMins * 60000);
+    }
+  }
+
+  function toggleSearchBar() {
+    const w = document.getElementById('search-wrap');
+    w.classList.toggle('open');
+    if (w.classList.contains('open')) document.getElementById('search-input').focus();
+  }
+
+  function openNowPlaying() { document.getElementById('now-playing-sheet').classList.add('open'); }
+  function closeNowPlaying() { document.getElementById('now-playing-sheet').classList.remove('open'); }
+  function openSheet(id) { document.getElementById(id).classList.add('open'); }
+  function closeSheet(id, ev) {
+    if (!ev || ev.target.id === id) document.getElementById(id).classList.remove('open');
+  }
+
+  window.handleBackPress = () => {
+    const np = document.getElementById('now-playing-sheet');
+    if (np.classList.contains('open')) { closeNowPlaying(); return "true"; }
+    if (subCategoryFilter) { subCategoryFilter = null; renderContent(); return "true"; }
+    return "false";
+  };
+</script>
+</body>
+</html>
