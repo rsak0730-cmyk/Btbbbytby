@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         webView.setBackgroundColor(Color.BLACK)
         webView.webChromeClient = WebChromeClient()
 
-        // Intercept virtual album art URLs to stream real embedded cover art from MediaStore
+        // Intercept local art URLs to stream embedded album art directly from MediaStore
         webView.webViewClient = object : WebViewClient() {
             override fun shouldInterceptRequest(
                 view: WebView?,
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                             "Music"
                         }
 
-                        if (duration > 5000) { // Skip tiny notification tones under 5 sec
+                        if (duration > 3000) { // Skip short notification audio
                             val obj = JSONObject()
                             obj.put("id", id)
                             obj.put("title", title)
@@ -272,7 +272,6 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun setEqBand(bandIndex: Int, levelPercent: Int) {
-            // levelPercent from -15 to +15 dB
             try {
                 equalizer?.let { eq ->
                     val numBands = eq.numberOfBands
@@ -290,7 +289,6 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun setBassBoostLevel(strength: Int) {
-            // strength from 0 to 1000
             try {
                 bassBoost?.setStrength(strength.toShort())
             } catch (e: Exception) {
@@ -301,7 +299,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         webView.evaluateJavascript("window.handleBackPress()") { result ->
-            if (result != "true") {
+            if (result != "\"true\"" && result != "true") {
                 super.onBackPressed()
             }
         }

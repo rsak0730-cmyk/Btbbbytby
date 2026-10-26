@@ -9,7 +9,7 @@
     --bg-primary: #000000;
     --bg-surface: #121212;
     --bg-elevated: #1c1c1e;
-    --bg-mini: #252528;
+    --bg-mini: #222226;
     --text-main: #f5f5f7;
     --text-sub: #8e8e93;
     --accent: #3e91ff;
@@ -29,7 +29,6 @@
   }
   body.theme-emerald { --accent: #1db954; }
   body.theme-violet { --accent: #8b5cf6; }
-  body.theme-rose { --accent: #f43f5e; }
 
   * {
     box-sizing: border-box;
@@ -50,7 +49,7 @@
     transition: background 0.25s, color 0.25s;
   }
 
-  /* 1. SAMSUNG ONE UI COLLAPSIBLE HEADER */
+  /* SAMSUNG ONE UI COLLAPSIBLE HEADER */
   .oneui-top-container {
     height: 195px;
     min-height: 56px;
@@ -116,23 +115,15 @@
     justify-content: center;
     cursor: pointer;
   }
-  .icon-btn:active {
-    background: var(--divider);
-  }
-  .icon-btn svg {
-    width: 22px;
-    height: 22px;
-    fill: currentColor;
-  }
+  .icon-btn:active { background: var(--divider); }
+  .icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
 
-  /* 2. SEARCH BAR OVERLAY */
+  /* SEARCH BAR */
   .search-bar-wrap {
     display: none;
     padding: 4px 16px 10px;
   }
-  .search-bar-wrap.open {
-    display: block;
-  }
+  .search-bar-wrap.open { display: block; }
   .search-box {
     width: 100%;
     height: 40px;
@@ -145,7 +136,7 @@
     outline: none;
   }
 
-  /* 3. EXACT SAMSUNG MUSIC UNDERLINE TABS */
+  /* SAMSUNG MUSIC UNDERLINE TABS */
   .sam-tabs {
     display: flex;
     overflow-x: auto;
@@ -165,9 +156,7 @@
     cursor: pointer;
     transition: color 0.2s;
   }
-  .sam-tab.active {
-    color: var(--text-main);
-  }
+  .sam-tab.active { color: var(--text-main); }
   .sam-tab.active::after {
     content: '';
     position: absolute;
@@ -179,7 +168,7 @@
     background: var(--text-main);
   }
 
-  /* 4. SUB-HEADER (SHUFFLE PLAY + SORT) */
+  /* TOOLBAR (SHUFFLE + SORT) */
   .list-toolbar {
     display: flex;
     justify-content: space-between;
@@ -200,7 +189,6 @@
     font-weight: 600;
     cursor: pointer;
   }
-  .shuffle-pill:active { opacity: 0.75; }
   .sort-btn {
     background: none;
     border: none;
@@ -212,7 +200,7 @@
     cursor: pointer;
   }
 
-  /* 5. ROUNDED ONE UI CONTENT SURFACE & TRACK LIST */
+  /* CONTENT LIST */
   .content-wrapper {
     flex: 1;
     position: relative;
@@ -234,13 +222,8 @@
     border-bottom: 1px solid var(--divider);
     cursor: pointer;
   }
-  .track-row:active {
-    background: var(--divider);
-  }
-  .track-row.active .t-title {
-    color: var(--accent);
-    font-weight: 700;
-  }
+  .track-row:active { background: var(--divider); }
+  .track-row.active .t-title { color: var(--accent); font-weight: 700; }
   .t-thumb {
     width: 48px;
     height: 48px;
@@ -251,17 +234,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
   }
-  .t-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .t-info {
-    flex: 1;
-    overflow: hidden;
-  }
+  .t-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .t-info { flex: 1; overflow: hidden; }
   .t-title {
     font-size: 15.5px;
     font-weight: 500;
@@ -290,7 +265,7 @@
     cursor: pointer;
   }
 
-  /* A-Z FAST SCROLL SIDEBAR */
+  /* A-Z FAST SCROLL */
   .az-bar {
     position: absolute;
     right: 4px;
@@ -300,18 +275,14 @@
     flex-direction: column;
     align-items: center;
     padding: 6px 3px;
-    border-radius: 10px;
     font-size: 10px;
     color: var(--text-sub);
     gap: 2px;
     z-index: 10;
   }
-  .az-char {
-    padding: 1px 4px;
-    cursor: pointer;
-  }
+  .az-char { padding: 1px 4px; cursor: pointer; }
 
-  /* ALBUMS & ARTISTS CLEAN GRID */
+  /* ALBUM / ARTIST GRIDS */
   .sam-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -335,13 +306,9 @@
     justify-content: center;
     overflow: hidden;
   }
-  .sam-card-art img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .sam-card-art img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* 6. SAMSUNG MUSIC BOTTOM MINI PLAYER PILL */
+  /* BOTTOM MINI PLAYER */
   .sam-mini-player {
     position: fixed;
     bottom: 10px;
@@ -369,21 +336,9 @@
     align-items: center;
     justify-content: center;
   }
-  .mini-art-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .mini-text {
-    flex: 1;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .mini-btns {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-  }
+  .mini-art-circle img { width: 100%; height: 100%; object-fit: cover; }
+  .mini-text { flex: 1; overflow: hidden; cursor: pointer; }
+  .mini-btns { display: flex; align-items: center; gap: 2px; }
   .m-btn {
     width: 38px;
     height: 38px;
@@ -395,13 +350,9 @@
     justify-content: center;
     cursor: pointer;
   }
-  .m-btn svg {
-    width: 22px;
-    height: 22px;
-    fill: currentColor;
-  }
+  .m-btn svg { width: 22px; height: 22px; fill: currentColor; }
 
-  /* 7. FULL-SCREEN NOW PLAYING (100% SAMSUNG MUSIC LAYOUT) */
+  /* FULL-SCREEN NOW PLAYING SHEET */
   #now-playing-sheet {
     position: fixed;
     inset: 0;
@@ -416,10 +367,7 @@
     transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.2, 1);
     overflow: hidden;
   }
-  #now-playing-sheet.open {
-    transform: translateY(0);
-  }
-  /* Dynamic Blurred Album Background */
+  #now-playing-sheet.open { transform: translateY(0); }
   #np-blur-bg {
     position: absolute;
     inset: -40px;
@@ -430,19 +378,15 @@
     transition: background-image 0.5s ease;
   }
 
-  .np-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  .np-top-bar { display: flex; justify-content: space-between; align-items: center; }
   .np-center-stage {
     flex: 1;
     display: flex;
-     flex-direction: column;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     position: relative;
-    my: 8px;
+    margin: 8px 0;
   }
   .np-album-box {
     width: min(74vw, 290px);
@@ -456,43 +400,30 @@
     justify-content: center;
     position: relative;
   }
-  .np-album-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .np-album-box img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* Synced Lyrics & Queue Drawer inside Now Playing */
+  /* LYRICS & QUEUE DRAWER */
   .np-panel-box {
     display: none;
     width: 100%;
     height: 280px;
     overflow-y: auto;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0,0,0,0.45);
     border-radius: 18px;
     padding: 16px;
     backdrop-filter: blur(12px);
   }
-  .np-panel-box.active {
-    display: block;
-  }
+  .np-panel-box.active { display: block; }
   .lrc-row {
-    padding: 7px 0;
+    padding: 8px 0;
     text-align: center;
     color: rgba(255,255,255,0.5);
     font-size: 15px;
     transition: 0.2s;
   }
-  .lrc-row.active {
-    color: #fff;
-    font-size: 17.5px;
-    font-weight: 700;
-  }
+  .lrc-row.active { color: #fff; font-size: 17.5px; font-weight: 700; }
 
-  .np-title-block {
-    text-align: center;
-    margin: 10px 0 6px;
-  }
+  .np-title-block { text-align: center; margin: 10px 0 6px; }
   .np-song-title {
     font-size: 21px;
     font-weight: 700;
@@ -506,7 +437,6 @@
     margin-top: 4px;
   }
 
-  /* Samsung Secondary Utility Row (Heart, Lyrics, SoundAlive EQ, Speed, Queue) */
   .np-utility-bar {
     display: flex;
     justify-content: space-between;
@@ -521,29 +451,13 @@
     font-weight: 600;
     padding: 8px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   .u-btn.liked { color: var(--heart); }
 
-  /* Subtle Visualizer Canvas */
-  #np-wave {
-    width: 100%;
-    height: 26px;
-    opacity: 0.75;
-  }
+  #np-wave { width: 100%; height: 26px; opacity: 0.75; }
 
-  /* Seek Bar */
-  .np-seek-area {
-    margin: 4px 0 10px;
-  }
-  .np-slider {
-    width: 100%;
-    height: 4px;
-    accent-color: #ffffff;
-    cursor: pointer;
-  }
+  .np-seek-area { margin: 4px 0 10px; }
+  .np-slider { width: 100%; height: 4px; accent-color: #ffffff; cursor: pointer; }
   .np-times {
     display: flex;
     justify-content: space-between;
@@ -552,25 +466,14 @@
     margin-top: 6px;
   }
 
-  /* Primary Playback Controls (Shuffle, Prev, Play/Pause, Next, Repeat) */
   .np-transport {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 4px 4px 8px;
   }
-  .t-btn {
-    background: none;
-    border: none;
-    color: #ffffff;
-    padding: 8px;
-    cursor: pointer;
-    opacity: 0.85;
-  }
-  .t-btn.active-mode {
-    color: var(--accent);
-    opacity: 1;
-  }
+  .t-btn { background: none; border: none; color: #ffffff; padding: 8px; cursor: pointer; opacity: 0.85; }
+  .t-btn.active-mode { color: var(--accent); opacity: 1; }
   .t-play-circle {
     width: 66px;
     height: 66px;
@@ -584,7 +487,7 @@
     cursor: pointer;
   }
 
-  /* 8. ONE UI BOTTOM SHEETS (SETTINGS, SOUNDALIVE EQ, TRACK MENU) */
+  /* BOTTOM SHEETS (SETTINGS, EQUALIZER, MENU) */
   .sheet-backdrop {
     position: fixed;
     inset: 0;
@@ -593,9 +496,7 @@
     display: none;
     align-items: flex-end;
   }
-  .sheet-backdrop.open {
-    display: flex;
-  }
+  .sheet-backdrop.open { display: flex; }
   .oneui-sheet {
     width: 100%;
     background: var(--bg-elevated);
@@ -645,12 +546,7 @@
     height: 115px;
     accent-color: var(--accent);
   }
-  .chip-row {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-  }
+  .chip-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
   .chip-btn {
     padding: 6px 14px;
     border-radius: 16px;
@@ -665,10 +561,9 @@
 </head>
 <body>
 
-<!-- Web File Picker Fallback (if tested in browser) -->
 <input type="file" id="browser-file-input" multiple accept="audio/*" style="display:none">
 
-<!-- 1. ONE UI COLLAPSIBLE HEADER -->
+<!-- TOP HEADER -->
 <header class="oneui-top-container" id="oneui-header">
   <div class="oneui-title-area">
     <div class="oneui-big-title">SAMSUNG Music</div>
@@ -676,28 +571,25 @@
   <div class="oneui-action-bar">
     <div class="collapsed-title">SAMSUNG Music</div>
     <div class="action-icons">
-      <!-- Search Icon -->
       <button class="icon-btn" onclick="toggleSearchBar()" title="Search">
         <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
       </button>
-      <!-- SoundAlive EQ Icon -->
       <button class="icon-btn" onclick="openSheet('eq-sheet')" title="SoundAlive Equalizer">
         <svg viewBox="0 0 24 24"><path d="M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V6h-2v12zm4-8v4h2v-4h-2z"/></svg>
       </button>
-      <!-- 3-Dot More / Settings Icon -->
-      <button class="icon-btn" onclick="openSheet('settings-sheet')" title="More Options">
+      <button class="icon-btn" onclick="openSheet('settings-sheet')" title="Settings">
         <svg viewBox="0 0 24 24"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
       </button>
     </div>
   </div>
 </header>
 
-<!-- 2. SEARCH INPUT -->
+<!-- SEARCH BAR -->
 <div class="search-bar-wrap" id="search-wrap">
   <input type="text" class="search-box" id="search-input" placeholder="Search tracks, artists, albums..." oninput="renderContent()">
 </div>
 
-<!-- 3. SAMSUNG MUSIC CATEGORY TABS -->
+<!-- TABS -->
 <nav class="sam-tabs">
   <div class="sam-tab" onclick="selectTab('favorites', this)">Favorites</div>
   <div class="sam-tab" onclick="selectTab('playlists', this)">Playlists</div>
@@ -707,7 +599,7 @@
   <div class="sam-tab" onclick="selectTab('folders', this)">Folders</div>
 </nav>
 
-<!-- 4. SHUFFLE PLAY & SORT TOOLBAR -->
+<!-- TOOLBAR -->
 <div class="list-toolbar">
   <button class="shuffle-pill" onclick="shufflePlayAll()">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
@@ -718,13 +610,13 @@
   </button>
 </div>
 
-<!-- 5. MAIN ROUNDED LIST CONTAINER + A-Z SCROLLBAR -->
+<!-- LIST & AZ SCROLLBAR -->
 <div class="content-wrapper">
   <main id="list-scroll" onscroll="onListScroll(this)"></main>
   <div class="az-bar" id="az-bar"></div>
 </div>
 
-<!-- 6. SAMSUNG BOTTOM MINI-PLAYER -->
+<!-- MINI PLAYER -->
 <div class="sam-mini-player">
   <div class="mini-art-circle" id="mini-art" onclick="openNowPlaying()">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="#888"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
@@ -746,11 +638,10 @@
   </div>
 </div>
 
-<!-- 7. FULL-SCREEN NOW PLAYING SCREEN -->
+<!-- FULL-SCREEN NOW PLAYING -->
 <section id="now-playing-sheet">
   <div id="np-blur-bg"></div>
 
-  <!-- Top Row -->
   <div class="np-top-bar">
     <button class="icon-btn" style="color:#fff" onclick="closeNowPlaying()">
       <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
@@ -761,7 +652,6 @@
     </button>
   </div>
 
-  <!-- Center Album Art / Lyrics / Queue -->
   <div class="np-center-stage">
     <div class="np-album-box" id="np-art-box" onclick="toggleNpDrawer('lyrics')">
       <svg width="80" height="80" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
@@ -769,13 +659,11 @@
     <div class="np-panel-box" id="np-drawer"></div>
   </div>
 
-  <!-- Track Title & Artist -->
   <div class="np-title-block">
     <div class="np-song-title" id="np-title">Not Playing</div>
     <div class="np-song-artist" id="np-artist">Unknown Artist</div>
   </div>
 
-  <!-- Utility Icons Row (Favorite, Lyrics, SoundAlive, Speed, Queue) -->
   <div class="np-utility-bar">
     <button class="u-btn" id="np-fav-btn" onclick="toggleCurrentFavorite()" style="font-size:21px;">♡</button>
     <button class="u-btn" onclick="toggleNpDrawer('lyrics')">LYRICS</button>
@@ -784,10 +672,8 @@
     <button class="u-btn" onclick="toggleNpDrawer('queue')">QUEUE</button>
   </div>
 
-  <!-- Subtle Audio Spectrum -->
   <canvas id="np-wave" width="320" height="26"></canvas>
 
-  <!-- Seek Bar -->
   <div class="np-seek-area">
     <input type="range" class="np-slider" id="np-seek" min="0" max="100" value="0" oninput="seekAudio(this.value)">
     <div class="np-times">
@@ -796,7 +682,6 @@
     </div>
   </div>
 
-  <!-- Main Playback Controls -->
   <div class="np-transport">
     <button class="t-btn" id="np-shuf-btn" onclick="toggleShuffleMode()">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
@@ -816,7 +701,7 @@
   </div>
 </section>
 
-<!-- SHEET 1: SOUNDALIVE EQUALIZER & BASS BOOST -->
+<!-- EQUALIZER SHEET -->
 <div class="sheet-backdrop" id="eq-sheet" onclick="closeSheet('eq-sheet', event)">
   <div class="oneui-sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
@@ -844,19 +729,19 @@
   </div>
 </div>
 
-<!-- SHEET 2: SAMSUNG MUSIC SETTINGS & MORE MENU -->
+<!-- SETTINGS SHEET -->
 <div class="sheet-backdrop" id="settings-sheet" onclick="closeSheet('settings-sheet', event)">
   <div class="oneui-sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
     <h3 style="font-size:18px; margin-bottom:10px;">Samsung Music Settings</h3>
     <div class="menu-item" onclick="rescanLibrary()">
-      <span>Rescan local storage / Import files</span><span>🔄</span>
+      <span>Rescan storage / Import music</span><span>🔄</span>
     </div>
     <div class="menu-item" onclick="cycleAppTheme()">
-      <span>Appearance & Accent Theme</span><span id="theme-status" style="color:var(--accent)">One UI Dark</span>
+      <span>Accent Color Theme</span><span id="theme-status" style="color:var(--accent)">One UI Blue</span>
     </div>
     <div class="menu-item" onclick="cycleSleepTimer()">
-      <span>Sleep timer (Auto-off)</span><span id="sleep-status" style="color:var(--accent)">Off</span>
+      <span>Sleep timer</span><span id="sleep-status" style="color:var(--accent)">Off</span>
     </div>
     <div class="menu-item" onclick="createNewPlaylistPrompt()">
       <span>Create new playlist</span><span>＋</span>
@@ -864,7 +749,7 @@
   </div>
 </div>
 
-<!-- SHEET 3: 3-DOT TRACK ACTION & TAG/LRC EDITOR -->
+<!-- TRACK OPTIONS SHEET -->
 <div class="sheet-backdrop" id="track-menu-sheet" onclick="closeSheet('track-menu-sheet', event)">
   <div class="oneui-sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
@@ -872,7 +757,7 @@
     <div class="menu-item" onclick="addSelectedToPlaylist()">
       <span>Add to Playlist</span><span>➕</span>
     </div>
-    <div style="margin-top:14px; font-size:13px; color:var(--text-sub); margin-bottom:6px;">Edit Track Metadata & Synced Lyrics (.LRC)</div>
+    <div style="margin-top:14px; font-size:13px; color:var(--text-sub); margin-bottom:6px;">Edit Metadata & Synced Lyrics (.LRC)</div>
     <input type="text" id="tag-title" class="search-box" style="margin-bottom:8px;" placeholder="Song Title">
     <input type="text" id="tag-artist" class="search-box" style="margin-bottom:8px;" placeholder="Artist">
     <textarea id="tag-lrc" class="search-box" style="height:95px; padding:10px; border-radius:14px;" placeholder="[00:10.00] Paste synced .LRC lyrics here..."></textarea>
@@ -891,30 +776,26 @@
 
   let activeTab = 'tracks';
   let subCategoryFilter = null;
-  let sortMode = 0; // 0: A-Z, 1: Artist, 2: Duration
+  let sortMode = 0;
   let currentIdx = -1;
   let menuTargetIdx = -1;
   let isPlaying = false;
   let isShuffle = false;
-  let repeatState = 0; // 0: Off, 1: All, 2: One
+  let repeatState = 0;
   let curSpeed = 1.0;
   let activeDrawer = null;
 
-  // Themes
   const appThemes = [
-    { cls: '', name: 'One UI Dark (Blue)' },
+    { cls: '', name: 'One UI Blue' },
     { cls: 'theme-light', name: 'One UI Light' },
     { cls: 'theme-emerald', name: 'AMOLED Emerald' },
-    { cls: 'theme-violet', name: 'Galaxy Violet' },
-    { cls: 'theme-rose', name: 'Crimson Rose' }
+    { cls: 'theme-violet', name: 'Galaxy Violet' }
   ];
   let themeIndex = 0;
 
-  // Sleep Timer
   let sleepMins = 0;
   let sleepTimerId = null;
 
-  // Browser fallback audio
   const htmlAudio = new Audio();
   let audioCtx, analyser, eqFilters = [];
 
@@ -935,7 +816,6 @@
         allTracks = JSON.parse(window.AndroidBridge.scanAllMusic());
       } catch (e) { allTracks = []; }
     }
-    // Apply saved user tag edits
     allTracks.forEach(t => {
       if (tagOverrides[t.id]) {
         t.title = tagOverrides[t.id].title || t.title;
@@ -960,7 +840,7 @@
     allTracks = files.map((f, i) => ({
       id: i + 1,
       title: f.name.replace(/\.[^/.]+$/, ""),
-      artist: "Unknown Artist",
+      artist: "Local Artist",
       album: "Local Storage",
       folder: "Music",
       duration: 200,
@@ -1026,7 +906,6 @@
     const filtered = getFilteredTracks();
     document.getElementById('shuffle-label').innerText = `Shuffle play (${filtered.length})`;
 
-    // Drill-down Back Button
     if (subCategoryFilter) {
       const backRow = document.createElement('div');
       backRow.className = 'track-row';
@@ -1035,7 +914,6 @@
       box.appendChild(backRow);
     }
 
-    // Playlists View
     if (activeTab === 'playlists' && !subCategoryFilter) {
       Object.keys(playlists).forEach(pName => {
         const count = playlists[pName].length;
@@ -1054,7 +932,6 @@
       return;
     }
 
-    // Albums / Artists / Folders Grid
     if ((activeTab === 'albums' || activeTab === 'artists' || activeTab === 'folders') && !subCategoryFilter) {
       const key = activeTab === 'albums' ? 'album' : (activeTab === 'artists' ? 'artist' : 'folder');
       const map = {};
@@ -1083,7 +960,7 @@
     }
 
     if (filtered.length === 0) {
-      box.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text-sub);">No music files found.<br><br>Tap <b>⋮ → Rescan local storage</b> to load audio.</div>`;
+      box.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text-sub);">No music files found.<br><br>Tap <b>Settings → Rescan storage</b> to load audio.</div>`;
       return;
     }
 
@@ -1118,7 +995,6 @@
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  /* PLAYBACK ENGINE */
   function playTrackAt(idx) {
     if (idx < 0 || idx >= allTracks.length) return;
     currentIdx = idx;
@@ -1266,7 +1142,6 @@
     else htmlAudio.playbackRate = curSpeed;
   }
 
-  /* LYRICS (.LRC) & UPCOMING QUEUE DRAWER */
   function toggleNpDrawer(mode) {
     const drawer = document.getElementById('np-drawer');
     const art = document.getElementById('np-art-box');
@@ -1288,7 +1163,7 @@
     if (!tr) return;
 
     if (activeDrawer === 'lyrics') {
-      const raw = lrcStore[tr.id] || "[00:00.00] No synced lyrics saved for this track.\n[00:03.00] Tap ⋮ top-right to paste .LRC lyrics.";
+      const raw = lrcStore[tr.id] || "[00:00.00] No synced lyrics saved.\n[00:03.00] Tap ⋮ to add .LRC text.";
       drawer.innerHTML = raw.split('\n').map(line => {
         const m = line.match(/\[(\d+):(\d+\.\d+)\](.*)/);
         if (m) {
@@ -1298,7 +1173,7 @@
         return `<div class="lrc-row">${line}</div>`;
       }).join('');
     } else if (activeDrawer === 'queue') {
-      drawer.innerHTML = `<div style="font-weight:700; margin-bottom:10px; font-size:14px;">Now Playing Queue (${allTracks.length})</div>` +
+      drawer.innerHTML = `<div style="font-weight:700; margin-bottom:10px; font-size:14px;">Playing Queue (${allTracks.length})</div>` +
         allTracks.slice(0, 40).map((t, i) => `
           <div onclick="playTrackAt(${i})" style="padding:9px 4px; border-bottom:1px solid rgba(255,255,255,0.1); font-size:13.5px; color:${i===currentIdx?'var(--accent)':'#fff'}; cursor:pointer;">
             ${i + 1}. ${t.title} <span style="opacity:0.6">— ${t.artist}</span>
@@ -1321,7 +1196,6 @@
     }
   }
 
-  /* SOUNDALIVE DSP & EQUALIZER */
   function setupBrowserWebAudio() {
     if (audioCtx) return;
     const Ctx = window.AudioContext || window.webkitAudioContext;
@@ -1360,7 +1234,6 @@
     else if (eqFilters[0]) eqFilters[0].gain.value = (val / 1000) * 15;
   }
 
-  /* SUBTLE WAVE SPECTRUM */
   function renderWaveLoop() {
     const cvs = document.getElementById('np-wave');
     const ctx = cvs.getContext('2d');
@@ -1384,7 +1257,6 @@
     draw();
   }
 
-  /* MENUS, TAG EDITOR, PLAYLISTS & SETTINGS */
   function openTrackOptions(idx, ev) {
     if (ev) ev.stopPropagation();
     menuTargetIdx = idx;
@@ -1417,7 +1289,7 @@
   }
 
   function createNewPlaylistPrompt() {
-    const name = prompt("Enter new playlist name:");
+    const name = prompt("Enter playlist name:");
     if (name && name.trim()) {
       playlists[name.trim()] = [];
       localStorage.setItem('sam_playlists', JSON.stringify(playlists));
@@ -1430,7 +1302,7 @@
     if (menuTargetIdx === -1) return;
     const tr = allTracks[menuTargetIdx];
     const names = Object.keys(playlists);
-    const chosen = prompt(`Add "${tr.title}" to playlist:\nAvailable: ${names.join(', ')}`, names[0] || "My Favorites Mix");
+    const chosen = prompt(`Add "${tr.title}" to playlist:\n${names.join(', ')}`, names[0] || "My Favorites Mix");
     if (chosen && chosen.trim()) {
       if (!playlists[chosen]) playlists[chosen] = [];
       if (!playlists[chosen].includes(tr.id)) playlists[chosen].push(tr.id);
