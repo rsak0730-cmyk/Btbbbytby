@@ -30,7 +30,7 @@ jobs:
           gradle-version: '8.5'
 
       - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon --stacktrace
 
       - name: Upload Compiled APK
         uses: actions/upload-artifact@v4
